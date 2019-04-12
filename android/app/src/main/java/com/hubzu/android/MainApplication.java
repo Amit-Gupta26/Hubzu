@@ -1,10 +1,10 @@
-package com.hubzuapp;
+package com.hubzu.android;
 
 import android.app.Application;
 
+import android.psykar.cookiemanager.CookieManagerPackage;
 import com.facebook.react.ReactApplication;
 import io.invertase.firebase.RNFirebasePackage;
-import com.psykar.cookiemanager.CookieManagerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;

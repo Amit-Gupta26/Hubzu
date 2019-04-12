@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "415654604827",
+    "firebase_url": "https://hubzuqe.firebaseio.com",
+    "project_id": "hubzuqe",
+    "storage_bucket": "hubzuqe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:415654604827:android:f1a44262722f810e",
+        "android_client_info": {
+          "package_name": "com.hubzu.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "415654604827-pkkontf075aon46m75qpi09rurc4fp1q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyASAkH6znTvWlVmUYDZz2eAwv3-WkJ1Q8I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "415654604827-pkkontf075aon46m75qpi09rurc4fp1q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "415654604827-gj4hjjir2vg0pn3mj6jfqj1bk1vpe366.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Hubzu.Hubzu.com"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

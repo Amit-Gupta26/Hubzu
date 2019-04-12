@@ -102,7 +102,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.hubzuapp"
+        applicationId "com.hubzu.android"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

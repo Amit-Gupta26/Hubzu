@@ -1,4 +1,4 @@
-package com.hubzuapp;
+package com.hubzu.android;
 
 import com.facebook.react.ReactActivity;
 
