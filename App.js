@@ -61,9 +61,22 @@ export default class App extends Component {
   }
 
   componentDidMount() {
+    this.createNotificationChannel();
     this.checkPermission();
     this.createNotificationListeners();
   }
+
+  createNotificationChannel = () => {
+    // Build a channel
+    const channel = new firebase.notifications.Android.Channel(
+      "hubzu-channel",
+      "Hubzu Channel",
+      firebase.notifications.Android.Importance.Max
+    ).setDescription("Hubzu apps notification channel");
+
+    // Create the channel
+    firebase.notifications().android.createChannel(channel);
+  };
 
   async checkPermission() {
     const enabled = await firebase.messaging().hasPermission();
@@ -85,7 +98,7 @@ export default class App extends Component {
             .getToken()
             .then(token => {
               this.state.firbaseToken = token;
-              console.log("Token"+token);
+              console.log("Token" + token);
             })
             .catch(error => {
               console.log(error);
@@ -307,9 +320,9 @@ export default class App extends Component {
           <WebView
             ref={"webview"}
             onLoad={() => this.hideSpinner()}
-            automaticallyAdjustContentInsets={false} 
+            automaticallyAdjustContentInsets={false}
             // style={styles.webView}
-             source={{ uri: HOME_URL }}
+            source={{ uri: HOME_URL }}
             javaScriptEnabled={true}
             // onNavigationStateChange={this.onNavigationStateChange.bind(this)}
             // injectedJavaScript={jsCode}
