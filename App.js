@@ -1,14 +1,6 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
 
 import React, { Component } from "react";
 import {
-  Platform,
   StyleSheet,
   View,
   Alert,
@@ -20,28 +12,7 @@ import {
 import firebase from "react-native-firebase";
 import CookieManager from "react-native-cookies";
 
-const HOME_URL = "https://www.owners.com/";
-const HOWITWORKS_URL = "https://www.owners.com/";
-const SEARCH_URL =
-  "https://www.owners.com/homes-for-sale/city/1117661/ga/atlanta?";
-const SEARCH_URL_CANA =
-  "https://www.owners.com/homes-for-sale/city/1393612/va/cana?";
-
-// const injectScript = (function () {
-//     window.onclick = function(e) {
-//       var originalPostMessage = window.postMessage;
-
-//   var patchedPostMessage = function(message, targetOrigin, transfer) {
-//     originalPostMessage(message, targetOrigin, transfer);
-//   };
-
-//   patchedPostMessage.toString = function() {
-//     return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage');
-//   };
-
-//   window.postMessage = patchedPostMessage;
-//     }
-//   }());
+const HOME_URL = "https://buy-cif-feature-web-qe.internal.hubzu.com/";
 
 export default class App extends Component {
   constructor(props) {
@@ -78,6 +49,38 @@ export default class App extends Component {
     firebase.notifications().android.createChannel(channel);
   };
 
+  registerToken(userId) {
+    let data = {
+      method: "POST",
+      credentials: "same-origin",
+      mode: "same-origin",
+      body: JSON.stringify({
+        deviceType: "ios",
+        deviceId: this.state.firbaseToken
+      }),
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      }
+    };
+    this.registerForPush(data, userId);
+  };
+
+  unregisterToken() {
+    fetch(
+      `https://buy-cif-feature-web-qe.internal.hubzu.com/portal/buyer-app/devices/unregister/${
+        this.state.firbaseToken
+      }`,
+      {
+        method: "delete"
+      }
+    ).then(response =>
+      response.json().then(json => {
+        console.log(json);
+      })
+    );
+  }
+
   async checkPermission() {
     const enabled = await firebase.messaging().hasPermission();
     if (enabled) {
@@ -98,7 +101,7 @@ export default class App extends Component {
             .getToken()
             .then(token => {
               this.state.firbaseToken = token;
-              console.log("Token" + token);
+              console.log("token#####" + token);
             })
             .catch(error => {
               console.log(error);
@@ -145,15 +148,16 @@ export default class App extends Component {
       .onNotification(notification => {
         const { title, body } = notification;
         // this.showAlert(title, body);
-        if (this.state.searchUrl == SEARCH_URL) {
-          this.setState({
-            searchUrl: SEARCH_URL_CANA
-          });
-        } else {
-          this.setState({
-            searchUrl: SEARCH_URL
-          });
-        }
+        // if (this.state.searchUrl == SEARCH_URL) {
+        //   this.setState({
+        //     searchUrl: SEARCH_URL_CANA
+        //   })
+        // }
+        // else {
+        //   this.setState({
+        //     searchUrl: SEARCH_URL
+        //   })
+        // }
       });
 
     /*
@@ -164,15 +168,16 @@ export default class App extends Component {
       .onNotificationOpened(notificationOpen => {
         const { title, body } = notificationOpen.notification;
         // this.showAlert(title, body);
-        if (this.state.searchUrl == SEARCH_URL) {
-          this.setState({
-            searchUrl: SEARCH_URL_CANA
-          });
-        } else {
-          this.setState({
-            searchUrl: SEARCH_URL
-          });
-        }
+        // if (this.state.searchUrl == SEARCH_URL) {
+        //   this.setState({
+        //     searchUrl: SEARCH_URL_CANA
+        //   })
+        // }
+        // else {
+        //   this.setState({
+        //     searchUrl: SEARCH_URL
+        //   })
+        // }
       });
 
     /*
@@ -184,15 +189,16 @@ export default class App extends Component {
     if (notificationOpen) {
       const { title, body } = notificationOpen.notification;
       // this.showAlert(title, body);
-      if (this.state.searchUrl == SEARCH_URL) {
-        this.setState({
-          searchUrl: SEARCH_URL_CANA
-        });
-      } else {
-        this.setState({
-          searchUrl: SEARCH_URL
-        });
-      }
+      // if (this.state.searchUrl == SEARCH_URL) {
+      //   this.setState({
+      //     searchUrl: SEARCH_URL_CANA
+      //   })
+      // }
+      // else {
+      //   this.setState({
+      //     searchUrl: SEARCH_URL
+      //   })
+      // }
     }
     /*
      * Triggered for data only payload in foreground
@@ -200,15 +206,16 @@ export default class App extends Component {
     this.messageListener = firebase.messaging().onMessage(message => {
       //process data message
       console.log(JSON.stringify(message));
-      if (this.state.searchUrl == SEARCH_URL) {
-        this.setState({
-          searchUrl: SEARCH_URL_CANA
-        });
-      } else {
-        this.setState({
-          searchUrl: SEARCH_URL
-        });
-      }
+      // if (this.state.searchUrl == SEARCH_URL) {
+      //   this.setState({
+      //     searchUrl: SEARCH_URL_CANA
+      //   })
+      // }
+      // else {
+      //   this.setState({
+      //     searchUrl: SEARCH_URL
+      //   })
+      // }
     });
   }
 
@@ -221,56 +228,59 @@ export default class App extends Component {
     );
   }
 
-  onNavigationStateChange(navState) {
-    // If we get redirected back to the HOME_URL we know that we are logged in. If your backend does something different than this
-    // change this line.
-    // if (navState.url == HOWITWORKS_URL) {
-    CookieManager.get(HOWITWORKS_URL, (err, cookie) => {
-      let isAuthenticated;
-      // If it differs, change `cookie.remember_me` to whatever the name for your persistent cookie is!!!
-      if (cookie && cookie.hasOwnProperty("uuid")) {
-        let uuidVal = cookie.uuid;
-        isAuthenticated = true;
-        let data = {
-          method: "POST",
-          credentials: "same-origin",
-          mode: "same-origin",
-          body: JSON.stringify({
-            deviceType: "ios",
-            deviceId: this.state.firbaseToken ? this.state.firbaseToken : ""
-          }),
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "X-CSRFToken": ""
-          }
-        };
-        this.registerForPush(data, uuidVal);
-      } else {
-        isAuthenticated = false;
-      }
-      this.setState({
-        loggedIn: isAuthenticated,
-        loadedCookie: true
-      });
-    });
-    this.setState({
-      loggedIn: true
-    });
-    // }
-  }
+  // onNavigationStateChange(navState) {
+  //   // If we get redirected back to the HOME_URL we know that we are logged in. If your backend does something different than this
+  //   // change this line.
+  //   // if (navState.url == HOWITWORKS_URL) {
+  //   CookieManager.get(HOWITWORKS_URL, (err, cookie) => {
+  //     let isAuthenticated;
+  //     // If it differs, change `cookie.remember_me` to whatever the name for your persistent cookie is!!!
+  //     if (cookie && cookie.hasOwnProperty("uuid")) {
+  //       let uuidVal = cookie.uuid;
+  //       isAuthenticated = true;
+  //       let data = {
+  //         method: "POST",
+  //         credentials: "same-origin",
+  //         mode: "same-origin",
+  //         body: JSON.stringify({
+  //           deviceType: "ios",
+  //           deviceId: this.state.firbaseToken ? this.state.firbaseToken : ""
+  //         }),
+  //         headers: {
+  //           Accept: "application/json",
+  //           "Content-Type": "application/json",
+  //           "X-CSRFToken": ""
+  //         }
+  //       };
+  //       this.registerForPush(data, uuidVal);
+  //     } else {
+  //       isAuthenticated = false;
+  //     }
+  //     this.setState({
+  //       loggedIn: isAuthenticated,
+  //       loadedCookie: true
+  //     });
+  //   });
+  //   this.setState({
+  //     loggedIn: true
+  //   });
+  //   // }
+  // }
 
   registerForPush = (postData, userId) => {
+    console.log("registerForPush" + userId);
     return fetch(
-      "https://www.owners.com/user/v2/devices/register/" + userId,
+      `https://buy-cif-feature-web-qe.internal.hubzu.com/portal/buyer-app/devices/register/${userId}`,
       postData
     )
       .then(response => response.json())
       .then(responseJson => {
+        console.log("Success->>>>>>");
         this.state.loggedIn = true;
         console.log(responseJson);
       })
       .catch(error => {
+        console.log("Error ->>>>>");
         console.error(error);
       });
   };
@@ -283,53 +293,62 @@ export default class App extends Component {
     }
   }
 
-  // onWebViewMessage(event) {
-  //   console.log("Message received from webview");
+  onWebViewMessage(event) {
+    console.log("Message received from webview");
+    let msgData;
+    try {
+      console.log(event.nativeEvent.data);
+      msgData = JSON.parse(event.nativeEvent.data);
+      console.log("msgData######" + msgData.uuid);
+    } catch (err) {
+      console.warn(err);
+      return;
+    }
 
-  //   let msgData;
-  //   try {
-  //     msgData = JSON.parse(event.nativeEvent.data);
-  //   } catch (err) {
-  //     console.warn(err);
-  //     return;
-  //   }
-
-  //   switch (msgData.targetFunc) {
-  //     case "handleDataReceived":
-  //       this[msgData.targetFunc].apply(this, [msgData]);
-  //       break;
-  //   }
-  // }
-
-  // onLoad(e) {
-  //   // onload is called multiple times...
-  //   if ( this.state.loaded ) {
-  //     return
-  //   }
-  //   this.setState({ loaded: true }, () => this.bridge.injectJavaScript('window.onLoad()'))
-  // }
-  // onMessage(payload) {
-  //   console.log('got message from web view', payload)
-  // }
+    switch (msgData.message) {
+      case "PostMessageWebViewSignin":
+        let uuid = msgData.uuid;
+        this.registerToken(uuid);
+        break;
+      case "PostMessageWebViewSignout":
+        this.unregisterToken();
+        break;
+    }
+  }
 
   render() {
-    // const jsCode = `window.postMessage('test');`;
+    const patchPostMessageFunction = () => {
+      var originalPostMessage = window.postMessage;
+      var patchedPostMessage = function(message, targetOrigin, transfer) {
+        originalPostMessage(message, targetOrigin, transfer);
+      };
+
+      patchedPostMessage.toString = () => {
+        return String(Object.hasOwnProperty).replace(
+          "hasOwnProperty",
+          "postMessage"
+        );
+      };
+      window.postMessage = patchedPostMessage;
+    };
+
+    const patchPostMessageJsCode =
+      "(" + String(patchPostMessageFunction) + ")();";
+
     return (
       <SafeAreaView style={styles.mainContainer}>
         <View style={styles.viewContainer}>
           <WebView
+            useWebKit={true}
             ref={"webview"}
             onLoad={() => this.hideSpinner()}
             automaticallyAdjustContentInsets={false}
-            // style={styles.webView}
-            source={{ uri: HOME_URL }}
+            source={{ uri: this.state.searchUrl }}
             javaScriptEnabled={true}
             // onNavigationStateChange={this.onNavigationStateChange.bind(this)}
-            // injectedJavaScript={jsCode}
-            // onMessage={this.onWebViewMessage}
-            // startInLoadingState={true}
-            scalesPageToFit={true}
-            // onMessage={this.onWebViewMessage}
+            injectedJavaScript={patchPostMessageJsCode}
+            onMessage={this.onWebViewMessage}
+            // scalesPageToFit={true}
             onLoadStart={() => {
               console.log("LOAD START ");
             }}
